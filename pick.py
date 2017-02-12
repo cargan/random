@@ -1,7 +1,23 @@
+import sys
 import random
 
 
+config_cats = {
+    'answer': 'Your cat is: {}',
+    'title': 'Please make your selection to get your Cat',
+    'questions': {
+        'Please enter your sex m/f: ': ['m', 'f'],
+    },
+    'data': {
+        'm': ['rusu melynoji', 'abisinija'],
+        'f': ['pudel', 'ziurke']
+    }
+}
+
+
 config_dog = {
+    'answer': 'Your dog is: {}',
+    'title': 'Please make your selection to get your Dog',
     'questions': {
         'Please enter your sex m/f: ': ['m', 'f'],
         'Please enter short/long hair, s/l: ': ['s', 'l'],
@@ -36,8 +52,16 @@ config_dog = {
 }
 
 
+available_configs = {
+    'cats': config_cats,
+    'dogs': config_dog,
+    'default': config_dog
+}
+
+
 def main(config):
     result = config['data']
+    print (config['title'])
     for question, allowed_values in config['questions'].items():
         while True:
             value = input(question).lower()
@@ -45,10 +69,17 @@ def main(config):
                result = result[value]
                break
 
-    dog = random.choice(result)
-    print ('Your dog is: {dog}'.format(dog=dog))
+    item = random.choice(result)
+    print (config['answer'].format(item))
+
 
 
 
 if __name__ == "__main__":
-    main(config_dog)
+    config = available_configs['default']
+    if len(sys.argv) == 2:
+        param = sys.argv[1]
+        if param in available_configs:
+            config = available_configs[param]
+
+    main(config)
